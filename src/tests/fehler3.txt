@@ -1,0 +1,3 @@
+0123 :* muss zu 123 (integer) werden *:
+
+90900090090909090090000000 :* muss fehlermeldung geben *:

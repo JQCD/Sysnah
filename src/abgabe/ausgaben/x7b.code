@@ -1,0 +1,268 @@
+DS $a 1
+DS $b 5
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+LC 4
+LC 5
+ADD
+LC 2
+LC 7
+ADD
+SUB
+LA $a
+LV
+ADD
+LA $a
+STR
+#L0 NOP
+LA $a
+LV
+LA $a
+LV
+LA $b
+LA $a
+LV
+ADD
+LV
+DIV
+LC 1
+ADD
+LES
+JIN #L1
+NOP
+JMP #L0
+#L1 NOP
+#L2 NOP
+LA $a
+LV
+LA $a
+LV
+LA $b
+LV
+DIV
+LC 1
+ADD
+LES
+JIN #L3
+NOP
+JMP #L2
+#L3 NOP
+LA $a
+LV
+PRI
+NOP
+STP

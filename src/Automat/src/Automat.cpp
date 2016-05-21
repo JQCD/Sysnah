@@ -1,0 +1,164 @@
+/*
+ * Automat.cpp
+ *
+ */
+
+#include "../includes/Automat.h"
+
+static int STATES[26][22] = {
+//  0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21
+//	END	a-z	0-9	+	-	:	*	<	>	=	!	&	;	(	)	{	}	[	]	_rn	?
+	{1,	1,	2,	3,	4,	5,	6,	7,	8,	9,	10,	11,	12,	13,	14,	15,	16,	17,	18,	0,	25,	tokenUnknown}, 		//0 Start/UNKNOWN
+	{1,	1,	1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenIdentifier}, 	//1	Lexem
+	{1,	0,	2,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenInteger}, 		//2 Zahl
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenPlus}, 		//3 +
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenMinus}, 		//4 -
+	{1,	0,	0,	0,	0,	0,	20,	0,	0,	19,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenDivision}, 	//5 :
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenMultiply}, 	//6 *
+	{1,	0,	0,	0,	0,	23,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenLess}, 		//7 <
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenGreater}, 		//8 >
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenEqual}, 		//9 =
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenInvert}, 		//10 !
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenConcatenate}, 	//11 &
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenSemicolon}, 	//12 ;
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenOpenRound}, 	//13 (
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenCloseRound}, 	//14 )
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenOpenCurly}, 	//15 {
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenCloseCurly}, 	//16 }
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenOpenSquare}, 	//17 [
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenCloseSquare}, 	//18 ]
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenAssign}, 		//19 :=
+	{0,	20,	20,	20,	20,	20,	21,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	tokenComment},		//20 :* comment
+	{0,	20,	20,	20,	20,	22,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	tokenComment},		//21 :* * comment probably end
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenComment}, 		//22 :* *: comment end
+	{0,	0,	0,	0,	0,	0,	0,	0,	24,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenUnknown}, 		//23 <:
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenNotEqual},  	//24 <:>
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	tokenUnknown}		//25 UNKNOWN CHARACTER
+};
+
+int currentState;
+int lastState;
+int lastFinalState = 0;
+int lastFinalStateCounter = 0;
+
+Automat::Automat() {
+	lastState = 0;
+	currentState = 0;
+}
+
+Automat::~Automat() {
+}
+
+bool Automat::isFinalState(int state) {
+	return STATES[state][0] == 1;
+}
+
+int Automat::getReturnChars(int state) {
+	return STATES[state][0];
+}
+
+int Automat::getTransitionColumn(char c) {
+	if (c == ' ' || c == '\r' || c == '\n') {
+		return 19;
+	} else if ((c >= 'a' && c <= 'z') | (c >= 'A' && c <= 'Z')) {
+		return 1;
+	} else if (c >= '0' && c <= '9') {
+		return 2;
+	} else if (c == '+') {
+		return 3;
+	} else if (c == '-') {
+		return 4;
+	} else if (c == ':') {
+		return 5;
+	} else if (c == '*') {
+		return 6;
+	} else if (c == '<') {
+		return 7;
+	} else if (c == '>') {
+		return 8;
+	} else if (c == '=') {
+		return 9;
+	} else if (c == '!') {
+		return 10;
+	} else if (c == '&') {
+		return 11;
+	} else if (c == ';') {
+		return 12;
+	} else if (c == '(') {
+		return 13;
+	} else if (c == ')') {
+		return 14;
+	} else if (c == '{') {
+		return 15;
+	} else if (c == '}') {
+		return 16;
+	} else if (c == '[') {
+		return 17;
+	} else if (c == ']') {
+		return 18;
+	}
+	return 20;
+}
+
+int Automat::getNextState(char c) {
+	int column = getTransitionColumn(c);
+	int nextState = STATES[currentState][column];
+	return nextState;
+}
+
+void Automat::setNewState(int state) {
+	lastState = currentState;
+	currentState = state;
+
+	if (isFinalState(currentState)) {
+		lastFinalState = currentState;
+		lastFinalStateCounter = 0;
+	}
+}
+
+int Automat::getFinalState() {
+	int state = lastFinalState;
+	setNewState(0);
+	return state;
+}
+
+int Automat::getCurrentState() {
+	return currentState;
+}
+
+/**
+ * return values:
+ * > 0 value is last valid state. current char is invalid for this state
+ * = 0 nothing special, just doing stuff right now
+ * < 0 error. return positive number of this value and try again.
+ */
+int Automat::readChar(char c) {
+	int rtrn = 0;
+	int nextState = getNextState(c);
+
+	if (nextState != 0) {
+		lastFinalStateCounter++;
+	}
+
+	if (nextState == 0) {
+		if (isFinalState(currentState)) {
+			rtrn = currentState;
+			currentState = 0;
+		} else {
+			rtrn = -lastFinalStateCounter;
+			currentState = lastFinalState;
+		}
+	} else {
+		setNewState(nextState);
+	}
+
+	return rtrn;
+}
+
+TokenType Automat::getTokenType(int state) {
+	return (TokenType) STATES[state][21];
+}
+
+bool Automat::shouldSaveChar() {
+	return currentState != 0;
+}

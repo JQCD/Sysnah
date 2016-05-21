@@ -1,0 +1,17 @@
+hallo
+:*kommentar*:if
+
+:*kommentar2*:if
+
+:*kommentar3*:while
+
+:*kommentar4*:123
+:* Richy: Nur am Dateiende wird das letzte Token ignoriert, egal was es für ein token ist*:
+:* und auch wenn dazwischen ein (oder mehrere) zeilenumbüche sind *:
+:*kommentar5*: 
+
+
+
+
+
+IgnoriereMichNicht
