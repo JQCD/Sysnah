@@ -8,18 +8,18 @@
 static int STATES[26][22] = {
 //  0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21
 //	END	a-z	0-9	+	-	:	*	<	>	=	!	&	;	(	)	{	}	[	]	_rn	?
-	{1,	1,	2,	3,	4,	5,	6,	7,	8,	9,	10,	11,	12,	13,	14,	15,	16,	17,	18,	0,	25,	tokenUnknown}, 		//0 Start/UNKNOWN
+	{1,	1,	2,	3,	4,	5,	6,	7,	8,	9,	10,	11,	12,	13,	14,	15,	16,	17,	18,	0,	26,	tokenUnknown}, 		//0 Start/UNKNOWN
 	{1,	1,	1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenIdentifier}, 	//1	Lexem
 	{1,	0,	2,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenInteger}, 		//2 Zahl
 	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenPlus}, 		//3 +
 	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenMinus}, 		//4 -
 	{1,	0,	0,	0,	0,	0,	20,	0,	0,	19,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenDivision}, 	//5 :
 	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenMultiply}, 	//6 *
-	{1,	0,	0,	0,	0,	23,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenLess}, 		//7 <
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenLess}, 		//7 <
 	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenGreater}, 		//8 >
-	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenEqual}, 		//9 =
+	{1,	0,	0,	0,	0,	23,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenEqual}, 		//9 =
 	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenInvert}, 		//10 !
-	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenConcatenate}, 	//11 &
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	25,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenUnknown}, 		//11 & (maybe &&)
 	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenSemicolon}, 	//12 ;
 	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenOpenRound}, 	//13 (
 	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenCloseRound}, 	//14 )
@@ -31,9 +31,10 @@ static int STATES[26][22] = {
 	{0,	20,	20,	20,	20,	20,	21,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	tokenComment},		//20 :* comment
 	{0,	20,	20,	20,	20,	22,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	tokenComment},		//21 :* * comment probably end
 	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenComment}, 		//22 :* *: comment end
-	{0,	0,	0,	0,	0,	0,	0,	0,	24,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenUnknown}, 		//23 <:
-	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenNotEqual},  	//24 <:>
-	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	tokenUnknown}		//25 UNKNOWN CHARACTER
+	{0,	0,	0,	0,	0,	0,	0,	0,	0,	24,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenUnknown}, 		//23 =:
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenNotEqual},  	//24 =:=
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenConcatenate}, 	//25 &&
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	tokenUnknown}		//26 UNKNOWN CHARACTER
 };
 
 int currentState;
@@ -49,13 +50,17 @@ Automat::Automat() {
 Automat::~Automat() {
 }
 
+// check if given state is final one
 bool Automat::isFinalState(int state) {
 	return STATES[state][0] == 1;
 }
 
-int Automat::getReturnChars(int state) {
-	return STATES[state][0];
+// current char should be saved
+bool Automat::isInValidState()
+{
+	return currentState != 0;
 }
+*/
 
 int Automat::getTransitionColumn(char c) {
 	if (c == ' ' || c == '\r' || c == '\n') {

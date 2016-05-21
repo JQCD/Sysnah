@@ -28,10 +28,11 @@ enum TokenType {
     tokenWhile,			//
     COUNT_TOKEN_TYPE,	// 24
     tokenEof,			//
-    tokenWrite,
-    tokenRead,
-    tokenInt,
-    tokenElse
+    tokenWrite,			// 26
+    tokenRead,          //
+    tokenInt,           // 28
+    tokenElse           //
+	// + 3 Einträge für Großschreibung: IF, ELSE, WHILE
 };
 
 #endif
