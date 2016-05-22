@@ -21,10 +21,6 @@
 #define CR 13
 #define DEBUG false // if(DEBUG) fprintf(stderr, "Meldung\n");
 
-Buffer::main {
-
-}
-
 Buffer::Buffer(const char *path) {
 	// Datei öffnen
     #ifdef NODIRECT

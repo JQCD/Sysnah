@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h> // for strcmp(...)
 
 #define DEBUG false //if(DEBUG) fprintf(stderr, "Meldung");
 
@@ -160,4 +161,36 @@ Token* Scanner::parseToken(int line, int column, int state) {
 
 	// return parsed token
 	return new Token(information, line, column, tokenType);
+}
+
+void print_usage(bool toStdOut = false) {
+    if (toStdOut) printf("USAGE: ./scanner SOURCEFILE\n");
+    else fprintf(stderr, "USAGE: ./scanner SOURCEFILE\n");
+}
+
+// MAIN
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        print_usage(false);
+        exit(-1);
+    }
+
+    char *source = argv[1];
+
+    if (source) {
+        Symboltable *symtable = new Symboltable();
+        Scanner *s = new Scanner(source, symtable);
+        Token* curToken = s->nextToken();
+
+        while (strcmp(curToken->getTokenTypeStr(), "Token EOF") != 0)
+        {
+        	printf("Type:<%s>\n", curToken->getTokenTypeStr());
+        	printf("Lexem:<%s>\n\n", curToken->getInformation()->getLexem());
+        	curToken = s->nextToken();
+        }
+        delete s;
+    } else {
+        fprintf(stderr, "Could not parse input and output files. Try again!\n");
+        exit(-3);
+    }
 }

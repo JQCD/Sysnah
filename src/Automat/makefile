@@ -2,6 +2,13 @@
 #		Targets zum Bauen des Tests
 #
 
+all: src/Automat.cpp includes/Automat.h 
+	mkdir -p objs
+	g++ -g  -c -Wall src/Automat.cpp -o objs/Automat.o 
+	
+clean:
+	cleanAutomat
+	
 # Linken der Object-files, abhaengig von AutomatTarget und TestAutomatTarget
 # flag:
 # -g --> debug Informationen erzeugen

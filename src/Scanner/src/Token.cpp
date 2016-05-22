@@ -77,8 +77,6 @@ const char *Token::getTokenTypeStr() {
             return "Token If";
         case tokenWhile:
             return "Token While";
-        case COUNT_TOKEN_TYPE:
-            return "Keine Ahnung, alter :D";
         case tokenUnknown:
             return "Token Unknown";
         case tokenEof:

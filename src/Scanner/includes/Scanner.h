@@ -18,10 +18,10 @@ private:
 	Symboltable *symtable;
 	Information parseIdentifier(char *lexem);
 	Token *parseToken(int line, int column, int state);
-	char *currTokenValue;
+	char *currentString;
 	char currentChar;
-	int currTokenValueIndex;
-    int maxLexemLength;
+	int currentStringIndex;
+    int maxStringLength;
 	bool eof;
 };
 

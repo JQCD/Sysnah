@@ -5,7 +5,7 @@
 
 #include "../includes/Automat.h"
 
-static int STATES[26][22] = {
+static int STATES[27][22] = {
 //  0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21
 //	END	a-z	0-9	+	-	:	*	<	>	=	!	&	;	(	)	{	}	[	]	_rn	?
 	{1,	1,	2,	3,	4,	5,	6,	7,	8,	9,	10,	11,	12,	13,	14,	15,	16,	17,	18,	0,	26,	tokenUnknown}, 		//0 Start/UNKNOWN
@@ -56,11 +56,12 @@ bool Automat::isFinalState(int state) {
 }
 
 // current char should be saved
-bool Automat::isInValidState()
+/**bool Automat::isInValidState()
 {
 	return currentState != 0;
 }
 */
+
 
 int Automat::getTransitionColumn(char c) {
 	if (c == ' ' || c == '\r' || c == '\n') {
@@ -138,7 +139,7 @@ int Automat::getCurrentState() {
  * < 0 error. return positive number of this value and try again.
  */
 int Automat::readChar(char c) {
-	int rtrn = 0;
+	int state = 0;
 	int nextState = getNextState(c);
 
 	if (nextState != 0) {
@@ -147,17 +148,17 @@ int Automat::readChar(char c) {
 
 	if (nextState == 0) {
 		if (isFinalState(currentState)) {
-			rtrn = currentState;
+			state = currentState;
 			currentState = 0;
 		} else {
-			rtrn = -lastFinalStateCounter;
+			state = -lastFinalStateCounter;
 			currentState = lastFinalState;
 		}
 	} else {
 		setNewState(nextState);
 	}
 
-	return rtrn;
+	return state;
 }
 
 TokenType Automat::getTokenType(int state) {

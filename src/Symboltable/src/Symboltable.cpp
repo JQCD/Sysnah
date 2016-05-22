@@ -11,6 +11,17 @@ Symboltable::Symboltable() {
 	for (int i = 0; i < SIZE; i++) {
 		lists[i] = 0;
 	}
+
+	// Definition aller Schlüsselwörter
+	this->insert("IF", tokenIf);
+	this->insert("if", tokenIf);
+	this->insert("ELSE", tokenElse);
+	this->insert("else", tokenElse);
+	this->insert("WHILE", tokenWhile);
+	this->insert("while", tokenWhile);
+	this->insert("int", tokenInt);
+	this->insert("read", tokenRead);
+	this->insert("write", tokenWrite);
 }
 
 Symboltable::~Symboltable() {
@@ -22,6 +33,7 @@ Symboltable::~Symboltable() {
 Information* Symboltable::insert(const char* lexem, TokenType tokenType) {
 	LinkedList* linkedList = getLinkedList(lexem);
 
+	// Lexem already in symTab
 	Information* information = linkedList->get(lexem);
 	if (information != 0) {
 		return information;

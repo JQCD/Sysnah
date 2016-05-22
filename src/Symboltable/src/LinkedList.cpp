@@ -13,7 +13,6 @@ LinkedList::LinkedList() {
 
 LinkedList::~LinkedList() {
 	delete first;
-    // Ja, ich war doof :D
 }
 
 bool LinkedList::contains(const char* lexem) {
@@ -21,14 +20,17 @@ bool LinkedList::contains(const char* lexem) {
 }
 
 Information* LinkedList::get(const char* lexem) {
+	// list empty
 	if (first == 0) {
 		return 0;
 	}
 
+	// last lexem is equal
 	if (last->equals(lexem)) {
 		return last->getInformation();
 	}
 
+	// search lexem inbetween 0 and last
 	ListElement* element = first;
 	while (element != 0) {
 		if (element->equals(lexem)) {
