@@ -1,7 +1,5 @@
 /*
  * Symboltable.h
- *
- *      Author: gori1013
  */
 
 #ifndef SYMBOLTABLE_H_
@@ -25,7 +23,7 @@ public:
 private:
 	LinkedList* getLinkedList(const char* lexem);
 
-	// made public for testing purpose
+	void initSymbols();
 	unsigned int hash(const char* lexem);
 	int getLinkedListIndex(const char* lexem);
 

@@ -1,8 +1,5 @@
 /*
  * Scanner.cpp
- *
- * Created on: 09.04.2015
- *	   Author: tobias
  */
 
 #include "../includes/Scanner.h"

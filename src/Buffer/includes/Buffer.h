@@ -1,8 +1,5 @@
 /*
  * Buffer.h
- *
- *  Created on: 27.03.2015
- *      Author: tobias
  */
 
 #ifndef BUFFER_H_

@@ -11,6 +11,17 @@ Symboltable::Symboltable() {
 		lists[i] = 0;
 	}
 
+	initSymbols();
+}
+
+Symboltable::~Symboltable() {
+	for (int i = 0; i < SIZE; i++) {
+		delete lists[i];
+	}
+}
+
+// insert keywords into symtab
+void Symboltable::initSymbols(){
 	// define all keywords
 	this->insert("IF", tokenIf);
 	this->insert("if", tokenIf);
@@ -18,15 +29,6 @@ Symboltable::Symboltable() {
 	this->insert("else", tokenElse);
 	this->insert("WHILE", tokenWhile);
 	this->insert("while", tokenWhile);
-	this->insert("int", tokenInt);
-	this->insert("read", tokenRead);
-	this->insert("write", tokenWrite);
-}
-
-Symboltable::~Symboltable() {
-	for (int i = 0; i < SIZE; i++) {
-		delete lists[i];
-	}
 }
 
 /** Insert lexem into the SymTab.

@@ -1,8 +1,5 @@
 /*
  * Buffer.cpp
- *
- *  Created on: 27.03.2015
- *      Author: tobias
  */
 
 #include "../includes/Buffer.h"

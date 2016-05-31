@@ -75,14 +75,14 @@ const char *Token::getTokenTypeStr() {
             return "Token Comment";
         case tokenIf:
             return "Token If";
+        case tokenElse:
+            return "Token Else";
         case tokenWhile:
             return "Token While";
         case tokenUnknown:
             return "Token Unknown";
         case tokenEof:
             return "Token EOF";
-        case tokenElse:
-            return "Token else";
         default:
             return "Undefined Token!!!";
     }
