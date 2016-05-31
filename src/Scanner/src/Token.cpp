@@ -55,8 +55,8 @@ const char *Token::getTokenTypeStr() {
             return "Token Not Eql";
         case tokenInvert:
             return "Token Invert";
-        case tokenConcatenate:
-            return "Token Concatenate";
+        case tokenCondAnd:
+            return "Token Conditional And";
         case tokenSemicolon:
             return "Token Semicolon";
         case tokenOpenRound:
@@ -81,12 +81,6 @@ const char *Token::getTokenTypeStr() {
             return "Token Unknown";
         case tokenEof:
             return "Token EOF";
-        case tokenWrite:
-            return "Token Write";
-        case tokenRead:
-            return "Token Read";
-        case tokenInt:
-            return "Token Int";
         case tokenElse:
             return "Token else";
         default:

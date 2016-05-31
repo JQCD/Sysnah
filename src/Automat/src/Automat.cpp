@@ -1,10 +1,47 @@
 /*
  * Automat.cpp
  *
+ * This class represents the state-machine.
+ * Each state represents a TokenType, and with it we can describe the accepted gramma.
  */
 
 #include "../includes/Automat.h"
+#include "stdio.h"
 
+//// the states that describe the gramma/transitions
+//static int STATES[27][22] = {
+////  0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21
+////	END	a-z	0-9	+	-	:	*	<	>	=	!	&	;	(	)	{	}	[	]	_rn	?
+//	{1,	1,	2,	3,	4,	5,	6,	7,	8,	9,	10,	11,	12,	13,	14,	15,	16,	17,	18,	0,	26,	tokenUnknown}, 		//0 Start/UNKNOWN
+//	{1,	1,	1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenIdentifier}, 	//1	Lexem
+//	{1,	0,	2,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenInteger}, 		//2 Zahl
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenPlus}, 		//3 +
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenMinus}, 		//4 -
+//	{1,	0,	0,	0,	0,	0,	20,	0,	0,	19,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenDivision}, 	//5 :
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenMultiply}, 	//6 *
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenLess}, 		//7 <
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenGreater}, 		//8 >
+//	{1,	0,	0,	0,	0,	23,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenEqual}, 		//9 =
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenInvert}, 		//10 !
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	25,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenUnknown}, 		//11 & (maybe &&)
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenSemicolon}, 	//12 ;
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenOpenRound}, 	//13 (
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenCloseRound}, 	//14 )
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenOpenCurly}, 	//15 {
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenCloseCurly}, 	//16 }
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenOpenSquare}, 	//17 [
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenCloseSquare}, 	//18 ]
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenAssign}, 		//19 :=
+//	{0,	20,	20,	20,	20,	20,	21,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	tokenComment},		//20 :* comment
+//	{0,	20,	20,	20,	20,	22,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	20,	tokenComment},		//21 :* * comment probably end
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenComment}, 		//22 :* *: comment end
+//	{0,	0,	0,	0,	0,	0,	0,	0,	0,	24,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenUnknown}, 		//23 =:
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenNotEqual},  	//24 =:=
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenConcatenate}, 	//25 &&
+//	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	tokenUnknown}		//26 UNKNOWN CHARACTER
+//};
+
+// the states that describe the gramma/transitions
 static int STATES[27][22] = {
 //  0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21
 //	END	a-z	0-9	+	-	:	*	<	>	=	!	&	;	(	)	{	}	[	]	_rn	?
@@ -33,13 +70,15 @@ static int STATES[27][22] = {
 	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenComment}, 		//22 :* *: comment end
 	{0,	0,	0,	0,	0,	0,	0,	0,	0,	24,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenUnknown}, 		//23 =:
 	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenNotEqual},  	//24 =:=
-	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenConcatenate}, 	//25 &&
+	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0, 	tokenCondAnd}, 	    //25 &&
 	{1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	tokenUnknown}		//26 UNKNOWN CHARACTER
 };
 
 int currentState;
 int lastState;
 int lastFinalState = 0;
+
+// distance (in #chars) to last finale state
 int lastFinalStateCounter = 0;
 
 Automat::Automat() {
@@ -61,7 +100,6 @@ bool Automat::isFinalState(int state) {
 	return currentState != 0;
 }
 */
-
 
 int Automat::getTransitionColumn(char c) {
 	if (c == ' ' || c == '\r' || c == '\n') {
@@ -106,12 +144,14 @@ int Automat::getTransitionColumn(char c) {
 	return 20;
 }
 
+// determines the next state for a given char
 int Automat::getNextState(char c) {
 	int column = getTransitionColumn(c);
 	int nextState = STATES[currentState][column];
 	return nextState;
 }
 
+// sets the new state
 void Automat::setNewState(int state) {
 	lastState = currentState;
 	currentState = state;
@@ -122,8 +162,17 @@ void Automat::setNewState(int state) {
 	}
 }
 
+// forces Automat to return the last final state and jump back to state 0.
+// Needed at EOF.
 int Automat::getFinalState() {
 	int state = lastFinalState;
+
+	//printf("currentState => %i", currentState);
+//	if (currentState == 20 || currentState == 21)
+//	{
+//
+//	}
+
 	setNewState(0);
 	return state;
 }

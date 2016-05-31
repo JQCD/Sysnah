@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <string.h> // for strcmp(...)
 
-#define DEBUG false //if(DEBUG) fprintf(stderr, "Meldung");
+#define DEBUG true //if(DEBUG) fprintf(stderr, "Meldung");
 
 /**
  * Constructs a scanner.
@@ -70,7 +70,7 @@ Token* Scanner::nextToken() {
 			fprintf(stderr,
 					"Found illegal char near line %i, column %i. Check input file!\n",
 					buffer->getLine(), buffer->getCol());
-			exit(-1);
+			//exit(-1);
 		}
 
 		if (currentChar != '\0') {
@@ -129,12 +129,6 @@ Token* Scanner::nextToken() {
 		}
 	}
 
-	if (DEBUG) {
-		// print token-type of currently scanned string
-		fprintf(stderr, "Scanner returning %s at %i/%i\n",
-				token->getTokenTypeStr(), token->getLine(), token->getCol());
-	}
-
 	return token;
 }
 
@@ -184,8 +178,26 @@ int main(int argc, char *argv[]) {
 
         while (strcmp(curToken->getTokenTypeStr(), "Token EOF") != 0)
         {
-        	printf("Type:<%s>\n", curToken->getTokenTypeStr());
-        	printf("Lexem:<%s>\n\n", curToken->getInformation()->getLexem());
+        	if (DEBUG) {
+            	if ((strcmp(curToken->getTokenTypeStr(), "Token Identifier") == 0)
+            			|| (strcmp(curToken->getTokenTypeStr(), "Token Unknown") == 0) )
+            	{
+            		printf("Type:%-25s     Line:%-5i       Column:%-5i Lexem:%-20s\n",
+            			curToken->getTokenTypeStr(),
+    					curToken->getLine(), curToken->getCol(),curToken->getInformation()->getLexem());
+            	}
+            	else if (strcmp(curToken->getTokenTypeStr(), "Token Integer") == 0)
+            	{
+            		printf("Type:%-25s     Line:%-5i       Column:%-5i Value:%-20s\n",
+            			curToken->getTokenTypeStr(), curToken->getLine(), curToken->getCol(),
+    					curToken->getInformation()->getLexem());
+            	}
+            	else
+            	{
+               		printf("Type:%-25s     Line:%-5i       Column:%-5i\n",
+               			curToken->getTokenTypeStr(), curToken->getLine(), curToken->getCol());
+            	}
+        	}
         	curToken = s->nextToken();
         }
         delete s;

@@ -14,7 +14,7 @@ class Information {
 	TokenType tokenType;
 
 private:
-	char* copy(const char* other);
+	void copy(const char* other);
 	int getSize(const char* lexem);
 
 	// needed for typecheck

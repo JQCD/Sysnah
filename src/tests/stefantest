@@ -4,4 +4,12 @@ X:=3+4;
 Z := ((3 + 4 * 6);
 Resultat := : X y %
 =:=
-=:aaaaa abcdef
+=:aaaaa abcd
+-90
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+-~-#+*~||
+Lexem99mitZahl8Gemischt
+:* kommentarA&&B A && B:*kommentarüäö *:
+!
+:*bis EOF-zeichen muss auch als kommentar erkannt werden
+

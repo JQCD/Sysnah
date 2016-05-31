@@ -2,8 +2,9 @@
 #define _TOKENTYPE_H_
 
 enum TokenType {
-    tokenIdentifier,	// 0
-    tokenInteger,		//
+
+    tokenInteger,		// 0
+    tokenIdentifier,	// 1
     tokenPlus,			// 2
     tokenMinus,			//
     tokenDivision,		// 4
@@ -14,7 +15,7 @@ enum TokenType {
     tokenAssign,		//
     tokenNotEqual,		// 10
     tokenInvert,		//
-    tokenConcatenate,	// 12
+    tokenCondAnd,		// 12
     tokenSemicolon,		//
     tokenOpenRound,		// 14
     tokenCloseRound,	//

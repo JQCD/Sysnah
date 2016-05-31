@@ -22,17 +22,12 @@ public:
 	Information* insert(const char* lexem, TokenType tokenType);
 	bool contains(const char* lexem);
 
-	// added for typecheck
-	void storeIdentifierType(const char* identifier, unsigned int identifierType);
-	unsigned int getIdentifierType(const char* identifier);
+private:
+	LinkedList* getLinkedList(const char* lexem);
 
 	// made public for testing purpose
 	unsigned int hash(const char* lexem);
 	int getLinkedListIndex(const char* lexem);
-
-private:
-	LinkedList* getLinkedList(const char* lexem);
-
 
 };
 
