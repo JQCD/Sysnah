@@ -29,6 +29,9 @@ void Symboltable::initSymbols(){
 	this->insert("else", tokenElse);
 	this->insert("WHILE", tokenWhile);
 	this->insert("while", tokenWhile);
+	this->insert("read", tokenRead);
+	this->insert("write", tokenWrite);
+	this->insert("int", tokenInt);
 }
 
 /** Insert lexem into the SymTab.
@@ -74,6 +77,30 @@ unsigned int Symboltable::hash(const char* lexem) {
 	for (int i = 0; lexem[i] != '\0'; i++) {
 		h = 31*h + lexem[i];
 	}
-
 	return h;
+}
+
+bool Symboltable::contains(const char* lexem) {
+	LinkedList* linkedList = getLinkedList(lexem);
+	return linkedList->contains(lexem);
+}
+
+void Symboltable::storeIdentifierType(const char* identifier, unsigned int identifierType) {
+	LinkedList* linkedList = getLinkedList(identifier);
+
+	Information* information = linkedList->get(identifier);
+	if (information == 0) {
+		return; // TODO: ERROR
+	}
+	information->setIdentifierType(identifierType);
+}
+
+unsigned int Symboltable::getIdentifierType(const char* identifier) {
+	LinkedList* linkedList = getLinkedList(identifier);
+
+	Information* information = linkedList->get(identifier);
+	if (information == 0) {
+		return -1; // TODO: ERROR
+	}
+	return information->getIdentifierType();
 }

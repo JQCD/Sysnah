@@ -87,3 +87,10 @@ void Information::setIdentifierType(unsigned int identifierType) {
 unsigned int Information::getIdentifierType() {
 	return this->identifierType;
 }
+
+long Information::getInteger() {
+	if (this->tokenType != tokenInteger) {
+		return 0xDEADBEEF; //ERROR!, vllt. besser machen :D
+	}
+	return strtol(this->lexem, NULL, 10);
+}
