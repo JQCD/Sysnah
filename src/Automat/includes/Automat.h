@@ -1,7 +1,5 @@
 /*
  * Automat.h
- *
- *      Author: gori1013
  */
 
 #ifndef Automat_H_

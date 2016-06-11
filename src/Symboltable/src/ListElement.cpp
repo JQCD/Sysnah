@@ -1,7 +1,5 @@
 /*
  * ListElement.cpp
- *
- *      Author: gori1013
  */
 
 #include "../includes/ListElement.h"

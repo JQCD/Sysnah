@@ -1,4 +1,6 @@
-
+/*
+ * Buffer.cpp
+ */
 
 #include "../includes/Buffer.h"
 
@@ -13,11 +15,11 @@
 #define LF 10 //Unix
 //carriage return
 #define CR 13
-#define DEBUG false
-// if(DEBUG) fprintf(stderr, "Meldung\n");
+#define DEBUG false // if(DEBUG) fprintf(stderr, "Meldung\n");
 
 Buffer::Buffer(const char *path) {
 	// Datei öffnen
+	//3) was macht NODIRECT?
     #ifdef NODIRECT
 	if ((this->fileDescriptor = open(path, O_RDONLY)) < 0) {
     #else
@@ -53,9 +55,9 @@ Buffer::Buffer(const char *path) {
 	this->currentBuffer = &this->buffer1;
 }
 
-// Inline Methode, die Speicher alloziert.
+// Inline Methode, die Speicher alloziert, nur zur Übersichtlichkeit ausgelagert.
 inline void Buffer::allocMem(void **mempt, int align, int size) {
-
+//1) Unterschied align, size?
 }
 //belegt size, wobei der allozierte Speicher das mehrfache von align ist.mempt speichert adresse ab der alloziert wurde
 	if (posix_memalign(mempt, align, size) != 0) {
@@ -79,7 +81,6 @@ int Buffer::readBytes(char* buf, int count) {
 	if (fileDescriptor > 0) {
 
 // liest aus fileDescriptor und schreibt count-viele Bytes in buf
-// wenn erfolgreich wird Anzahl der gelesenen bytes zurückgegeben
 		int bytesRead = read(this->fileDescriptor, buf, count);
 
 		if (bytesRead < 0) {
@@ -186,6 +187,8 @@ void Buffer::ungetChar(int count) {
 	for (int i = 0; i < count; i++) {
 		this->ungetChar();
 	}
+}
+
 // Gibt genau ein Zeichen zurück
 void Buffer::ungetChar() {
 	// Wenn man am Anfang der Datei ist

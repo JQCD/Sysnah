@@ -1,7 +1,5 @@
 /*
  * Information.h
- *
- *      Author: gori1013
  */
 
 #ifndef INFORMATION_H_

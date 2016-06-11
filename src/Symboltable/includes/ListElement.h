@@ -1,7 +1,5 @@
 /*
  * ListElement.h
- *
- *      Author: gori1013
  */
 
 #ifndef LISTELEMENT_H_
