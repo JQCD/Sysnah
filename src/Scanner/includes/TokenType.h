@@ -27,7 +27,10 @@ enum TokenType {
     tokenIf,			// 22
     tokenElse,          //
 	tokenWhile,			// 24
-    tokenEof			//
+	tokenWrite,			//
+	tokenRead,			// 26
+	tokenInt,           //
+    tokenEof			// 28
 };
 
 #endif
