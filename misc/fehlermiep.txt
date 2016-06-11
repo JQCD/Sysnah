@@ -1,0 +1,4 @@
+strtoi/long
+buffer zählen <: ganz viele zeilen
+if/while optimierung (scanner)
+if nach kommentar an dateiende (:*abc*:if)

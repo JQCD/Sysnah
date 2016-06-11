@@ -1,8 +1,0 @@
-\contentsline {section}{\numberline {1}Aufgabenstellung}{2}
-\contentsline {section}{\numberline {2}Erl\"auterung}{2}
-\contentsline {section}{\numberline {3}Scanner}{2}
-\contentsline {subsection}{\numberline {3.1}Buffer}{2}
-\contentsline {subsubsection}{\numberline {3.1.1}Erkl\"arung}{3}
-\contentsline {subsection}{\numberline {3.2}Automat}{3}
-\contentsline {subsection}{\numberline {3.3}Scanner}{3}
-\contentsline {subsection}{\numberline {3.4}Symboltabelle}{3}

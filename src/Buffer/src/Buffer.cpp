@@ -20,9 +20,18 @@
 
 Buffer::Buffer(const char *path) {
 	// Datei öffnen
+	//3) was macht NODIRECT?
     #ifdef NODIRECT
 	if ((this->fileDescriptor = open(path, O_RDONLY)) < 0) {
     #else
+    /*  The O_DIRECT flag may impose alignment restrictions on the length and
+              address of user-space buffers and the file offset of I/Os.  In Linux
+              alignment restrictions vary by filesystem and kernel version and
+              might be absent entirely.  However there is currently no
+              filesystem-independent interface for an application to discover these
+              restrictions for a given file or filesystem.  Some filesystems
+              provide their own interfaces for doing so, for example the
+              */
     if ((this->fileDescriptor = open(path, O_RDONLY | O_DIRECT)) < 0) {
     #endif
 		perror("Öffnen fehlgeschlagen");
@@ -52,6 +61,9 @@ Buffer::Buffer(const char *path) {
 
 // Inline Methode, die Speicher alloziert, nur zur Übersichtlichkeit ausgelagert.
 inline void Buffer::allocMem(void **mempt, int align, int size) {
+//1) Unterschied align, size?
+}
+//belegt size, wobei der allozierte Speicher das mehrfache von align ist.mempt speichert adresse ab der alloziert wurde
 	if (posix_memalign(mempt, align, size) != 0) {
 		perror("Speicher allozieren fehlgeschlagen");
 		exit(-1);
