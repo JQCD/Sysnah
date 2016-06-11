@@ -1,9 +1,4 @@
-/*
- * Buffer.cpp
- *
- *  Created on: 27.03.2015
- *      Author: tobias
- */
+
 
 #include "../includes/Buffer.h"
 
@@ -12,28 +7,24 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-// 1)wieso vielfaches von 512 Bytes?
-//5) grund für diese entscheidung 2 buffer  zu nehmen?
+
 #define BUFFERSIZE (1024 * int(sizeof(char)))
 //line feed
 #define LF 10 //Unix
 //carriage return
 #define CR 13
-#define DEBUG false // if(DEBUG) fprintf(stderr, "Meldung\n");
+#define DEBUG false
+// if(DEBUG) fprintf(stderr, "Meldung\n");
 
 Buffer::Buffer(const char *path) {
 	// Datei öffnen
-	//3) was macht NODIRECT?
     #ifdef NODIRECT
 	if ((this->fileDescriptor = open(path, O_RDONLY)) < 0) {
     #else
-    /*  The O_DIRECT flag may impose alignment restrictions on the length and
-              address of user-space buffers and the file offset of I/Os.  In Linux
-              alignment restrictions vary by filesystem and kernel version and
-              might be absent entirely.  However there is currently no
-              filesystem-independent interface for an application to discover these
-              restrictions for a given file or filesystem.  Some filesystems
-              provide their own interfaces for doing so, for example the
+    /*  The O_DIRECT flag on its own makes an effort
+                      to transfer data synchronously, but does not give the
+                      guarantees of the O_SYNC flag that data and necessary metadata
+                      are transferred.
               */
     if ((this->fileDescriptor = open(path, O_RDONLY | O_DIRECT)) < 0) {
     #endif
@@ -62,9 +53,9 @@ Buffer::Buffer(const char *path) {
 	this->currentBuffer = &this->buffer1;
 }
 
-// Inline Methode, die Speicher alloziert, nur zur Übersichtlichkeit ausgelagert.
+// Inline Methode, die Speicher alloziert.
 inline void Buffer::allocMem(void **mempt, int align, int size) {
-//1) Unterschied align, size?
+
 }
 //belegt size, wobei der allozierte Speicher das mehrfache von align ist.mempt speichert adresse ab der alloziert wurde
 	if (posix_memalign(mempt, align, size) != 0) {
@@ -88,6 +79,7 @@ int Buffer::readBytes(char* buf, int count) {
 	if (fileDescriptor > 0) {
 
 // liest aus fileDescriptor und schreibt count-viele Bytes in buf
+// wenn erfolgreich wird Anzahl der gelesenen bytes zurückgegeben
 		int bytesRead = read(this->fileDescriptor, buf, count);
 
 		if (bytesRead < 0) {
@@ -134,13 +126,9 @@ char Buffer::getChar() {
 	return curr;
 }
 
-// Liest das aktuelle Zeichen aus dem Buffer, geht aber nicht vor oder zurück, das muss vorher erledigt werden
-
-//Methode wird von getChar() aufgerufen, darin findet ein Fallunterscheidung abh. vom currentBufferIndex statt
+//Fallunterscheidung abh vom currentBufferIndex, werden buffer geswapt oder der nächste gefüllt.
 char Buffer::getCharFromCurrentBuffer() {
 
-	//Ist currentBufferIndex negativ, so wurde er noch nicht geladen, was dann getan wird
-	// fehlerhafte Initialisierung o.ä.
 	//Dieser Fall tritt ein wenn im buffer2 gelesen wird, ein Error bemerkt wird und er z.b. 10 zeichen zurück springen muss, welches sich aber in buffer 1 befindet
 	// dementsprechend muss der andere buffer wieder gelesen werden und der index auf das vorletzte zeichengröße
 	if (this->currentBufferIndex < 0) {
@@ -198,8 +186,6 @@ void Buffer::ungetChar(int count) {
 	for (int i = 0; i < count; i++) {
 		this->ungetChar();
 	}
-}
-
 // Gibt genau ein Zeichen zurück
 void Buffer::ungetChar() {
 	// Wenn man am Anfang der Datei ist
@@ -216,6 +202,12 @@ void Buffer::ungetChar() {
 	if (curr == LF) { // dann ans Ende der vorherigen Zeile
 		this->column = this->oldColumn;
 		this->line--;
-	  // Sonst nur eine Spalte zurück
-	} else this->column--;
+
+	}
+	// Sonst nur eine Spalte zurück
+	else {
+	    this->column--;
+	}
+}
+
 }
