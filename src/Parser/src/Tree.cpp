@@ -1,4 +1,4 @@
-/* Unkreativer Header hier */
+
 
 #define ENDL "\n";
 #define ERROR(x, line, col) fprintf(stderr, "%s at line %i, column %i\n", x, line, col);// exit(-1); //Soll das Programm hier beenden?

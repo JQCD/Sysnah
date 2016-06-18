@@ -6,6 +6,13 @@
 #include "../../Symboltable/includes/Symboltable.h"
 #include "Tree.h"
 
+/* Aufgaben des Parsers:
+- Fordert Tokens ovm Scanner
+- Prüft ob die Reihenfolge sinnvoll ist
+- Sobald ein korrekter Typ erkannt wird, wird ein Strukturbaum aufgebaut
+- Erkennt und behandelt Fehler
+*/
+
 class Parser {
 
 public:

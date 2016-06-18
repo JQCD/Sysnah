@@ -32,7 +32,8 @@ public:
     int getLine(){return this->line;};
     int getCol(){return this->col;};
 };
-
+// Da für jede erkannte Regel ein neuer Teilbaum entstehen soll, erstellen wir hier bereits für jede Regel
+// die erscheinen kann einen ParseTree.
 class IProg : public virtual IParseTree {};
 class IDecls : public virtual IParseTree {};
 class IDecl : public virtual IParseTree {};
@@ -48,7 +49,8 @@ public:
     virtual IOp *getOp(){return 0;};
 };
 
-
+/*Je nach Typ, werden die dazu gehörenden Knoten mitgegeben ( siehe Folie 34)
+Initialisierung wird mit den Methoden typeCheck(), makeCode() und addNOdes() vorgenommen.*/
 class Prog_I : public IProg {
 public:
     Prog_I();

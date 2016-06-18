@@ -64,6 +64,9 @@ IProg* Parser::PROG() {
     // set current line and column
     tree->setPos();
 
+/*identifier INDEX := EXP | write( EXP ) | read ( identifier INDEX ) | {STATEMENTS} | if ( EXP ) STATEMENT else STATEMENT |
+  while ( EXP ) STATEMENT
+  => fehlen nicht noch ein paar cases?*/
     switch (currTokenType) {
     	// valid token-types
         case tokenInt:
@@ -87,7 +90,8 @@ IProg* Parser::PROG() {
 
     return tree;
 }
-
+/* DECLS ::= DECL;DECLS| Epsilon
+*/
 IDecls* Parser::DECLS() {
     IDecls *tree;
     switch (currTokenType) {
@@ -125,6 +129,7 @@ IDecls* Parser::DECLS() {
     return tree;
 }
 
+// DECL = int ARRAY identifier
 IDecl* Parser::DECL() {
     IDecl *tree;
     if (currentToken->getTokenType() == tokenInt) {
@@ -146,6 +151,7 @@ IDecl* Parser::DECL() {
     return tree;
 }
 
+//ARRAY ::= [integer]| Epsilon
 IArray* Parser::ARRAY() {
     IArray *tree;
     if (currentToken->getTokenType() == tokenOpenSquare) {
@@ -172,7 +178,141 @@ IArray* Parser::ARRAY() {
     }
     return tree;
 }
+//INDEX = [EXP]| Epsilon
+IIndex* Parser::INDEX() {
+    IIndex *tree;
+    switch (currentToken->getTokenType()) {
+    case tokenOpenSquare: {
+        tree = new Index_I();
+        tree->setPos();
+        nextToken();
+        static_cast<Index_I*>(tree)->addNodes(EXP());
+        if (currentToken->getTokenType() != tokenCloseSquare) error("expected closing brackets", currentToken);
+        nextToken();
+        break;
+    }
+    case tokenAssign:
+    case tokenPlus:
+    case tokenCloseRound:
+    case tokenElse:
+    case tokenMinus:
+    case tokenMultiply:
+    case tokenDivision:
+    case tokenLess:
+    case tokenGreater:
+    case tokenNotEqual:
+    case tokenCondAnd:
+    case tokenEqual:
+    case tokenSemicolon:
+    case tokenCloseSquare: {
+        tree = new Index_II();
+        tree->setPos();
+        break;
+    }
+    default:
+        error("unidentified token", currentToken);
+    }
+    return tree;
+}
+// OP EXP = OP EXP| Epsilon
+IOp_Exp* Parser::OP_EXP() {
+    IOp_Exp *tree;
+    switch (currTokenType) {
+    case tokenPlus:
+    case tokenMinus:
+    case tokenMultiply:
+    case tokenDivision:
+    case tokenLess:
+    case tokenGreater:
+    case tokenEqual:
+    case tokenNotEqual:
+    case tokenCondAnd: {
+        tree = new Op_Exp_I();
+        tree->setPos();
+        IOp *op = OP();
+        static_cast<Op_Exp_I*>(tree)->addNodes(op, EXP());
+        break;
+    }
+    case tokenElse:
+    case tokenCloseRound:
+    case tokenSemicolon:
+    case tokenCloseSquare: {
+        tree = new Op_Exp_II();
+        tree->setPos();
+        break;
+    }
+    default:
+        error("unidentified token", currentToken);
+    }
+    return tree;
+}
 
+//OP ::= +|-|*|:|<|>|=|=:=|&&
+IOp* Parser::OP() {
+    IOp *tree;
+    switch (currTokenType) {
+        case tokenPlus: {
+            tree = new Op_I();
+            tree->setPos();
+            nextToken();
+            break;
+        }
+        case tokenMinus: {
+            tree = new Op_II();
+            tree->setPos();
+            nextToken();
+            break;
+        }
+        case tokenMultiply: {
+            tree = new Op_III();
+            tree->setPos();
+            nextToken();
+            break;
+        }
+        case tokenDivision: {
+            tree = new Op_IV();
+            tree->setPos();
+            nextToken();
+            break;
+        }
+        case tokenLess: {
+            tree = new Op_V();
+            tree->setPos();
+            nextToken();
+            break;
+        }
+        case tokenGreater: {
+            tree = new Op_VI();
+            tree->setPos();
+            nextToken();
+            break;
+        }
+        case tokenEqual: {
+            tree = new Op_VII();
+            tree->setPos();
+            nextToken();
+            break;
+        }
+        case tokenNotEqual: {
+            tree = new Op_VIII();
+            tree->setPos();
+            nextToken();
+            break;
+        }
+        case tokenCondAnd: {
+            tree = new Op_IX();
+            tree->setPos();
+            nextToken();
+            break;
+        }
+        default:
+        error("expected operator", currentToken);
+    }
+
+    return tree;
+
+}
+//STATEMENTS = STATEMENT ; STATEMENTS | Epsilon
 IStatements* Parser::STATEMENTS() {
     IStatements *tree;
     switch (currTokenType) {
@@ -205,6 +345,9 @@ IStatements* Parser::STATEMENTS() {
     return tree;
 }
 
+// STATEMENT = identifier INDEX := EXP | write( EXP ) | read ( identifier INDEX ) |
+//{STATEMENTS} | if ( EXP ) STATEMENT else STATEMENT |
+//              while ( EXP ) STATEMENT
 IStatement* Parser::STATEMENT() {
     IStatement *tree;
     if(DEBUG) fprintf(stderr, "In STATEMENT\n");
@@ -300,6 +443,7 @@ IStatement* Parser::STATEMENT() {
     return tree;
 }
 
+// EXP = EXP2 OP_EXP
 IExp* Parser::EXP() {
     if (currTokenType != tokenOpenRound && currTokenType != tokenIdentifier && currTokenType != tokenInteger &&
         currTokenType != tokenMinus && currTokenType != tokenInvert) error("unknwon token", currentToken);
@@ -312,6 +456,7 @@ IExp* Parser::EXP() {
     return tree;
 }
 
+// EXP2 = ( EXP ) | identifier INDEX | integer | - EXP2 | ! EXP2
 IExp2* Parser::EXP2() {
     IExp2 *tree;
     switch (currTokenType) {
@@ -363,138 +508,6 @@ IExp2* Parser::EXP2() {
     return tree;
 }
 
-IIndex* Parser::INDEX() {
-    IIndex *tree;
-    switch (currentToken->getTokenType()) {
-    case tokenOpenSquare: {
-        tree = new Index_I();
-        tree->setPos();
-        nextToken();
-        static_cast<Index_I*>(tree)->addNodes(EXP());
-        if (currentToken->getTokenType() != tokenCloseSquare) error("expected closing brackets", currentToken);
-        nextToken();
-        break;
-    }
-    case tokenAssign:
-    case tokenPlus:
-    case tokenCloseRound:
-    case tokenElse:
-    case tokenMinus:
-    case tokenMultiply:
-    case tokenDivision:
-    case tokenLess:
-    case tokenGreater:
-    case tokenNotEqual:
-    case tokenCondAnd:
-    case tokenEqual:
-    case tokenSemicolon:
-    case tokenCloseSquare: {
-        tree = new Index_II();
-        tree->setPos();
-        break;
-    }
-    default:
-        error("unidentified token", currentToken);
-    }
-    return tree;
-}
-
-IOp_Exp* Parser::OP_EXP() {
-    IOp_Exp *tree;
-    switch (currTokenType) {
-    case tokenPlus:
-    case tokenMinus:
-    case tokenMultiply:
-    case tokenDivision:
-    case tokenLess:
-    case tokenGreater:
-    case tokenEqual:
-    case tokenNotEqual:
-    case tokenCondAnd: {
-        tree = new Op_Exp_I();
-        tree->setPos();
-        IOp *op = OP();
-        static_cast<Op_Exp_I*>(tree)->addNodes(op, EXP());
-        break;
-    }
-    case tokenElse:
-    case tokenCloseRound:
-    case tokenSemicolon:
-    case tokenCloseSquare: {
-        tree = new Op_Exp_II();
-        tree->setPos();
-        break;
-    }
-    default:
-        error("unidentified token", currentToken);
-    }
-    return tree;
-}
-
-IOp* Parser::OP() {
-    IOp *tree;
-    switch (currTokenType) {
-        case tokenPlus: {
-            tree = new Op_I();
-            tree->setPos();
-            nextToken();
-            break;
-        }
-        case tokenMinus: {
-            tree = new Op_II();
-            tree->setPos();
-            nextToken();
-            break;
-        }
-        case tokenMultiply: {
-            tree = new Op_III();
-            tree->setPos();
-            nextToken();
-            break;
-        }
-        case tokenDivision: {
-            tree = new Op_IV();
-            tree->setPos();
-            nextToken();
-            break;
-        }
-        case tokenLess: {
-            tree = new Op_V();
-            tree->setPos();
-            nextToken();
-            break;
-        }
-        case tokenGreater: {
-            tree = new Op_VI();
-            tree->setPos();
-            nextToken();
-            break;
-        }
-        case tokenEqual: {
-            tree = new Op_VII();
-            tree->setPos();
-            nextToken();
-            break;
-        }
-        case tokenNotEqual: {
-            tree = new Op_VIII();
-            tree->setPos();
-            nextToken();
-            break;
-        }
-        case tokenCondAnd: {
-            tree = new Op_IX();
-            tree->setPos();
-            nextToken();
-            break;
-        }
-        default:
-        error("expected operator", currentToken);
-    }
-
-    return tree;
-
-}
 
 void print_usage(bool toStdOut = false) {
     if (toStdOut) printf("USAGE: parser SOURCEFILE -c OUTPUTFILE\n");
